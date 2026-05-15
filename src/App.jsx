@@ -12,6 +12,7 @@ const lines = [
   { text: "Some things become global because they are useful under pressure.", visual: "🌍", note: "distributed by necessity" },
   { text: "Others get pushed through platforms, devices, systems, defaults.", visual: "📱", note: "distributed by infrastructure" },
   { text: "The U2 album appearing on every iPhone was not really about U2.", visual: "🎧", note: "culture pretending to be a gift" },
+  { text: "It was about suddenly realising the device in your pocket was not fully yours.", visual: "🔓", note: "ownership glitch"},
   { text: "A gift becomes invasive the second it removes choice.", visual: "🎁", note: "consent is the interface" },
   { text: "I think I’m writing about how behaviour becomes infrastructure.", visual: "✍️", note: "visual notes in progress" },
 ];
@@ -42,7 +43,7 @@ export default function App() {
   const [gridOn, setGridOn] = useState(true);
 
   const current = lines[index];
-  const typed = useTypewriter(current.text, 60);
+  const typed = useTypewriter(current.text, 90);
 
   const storyFill = useMemo(() => {
     return ((index + 1) / lines.length) * 100;
@@ -58,15 +59,13 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [index, current.text, isAuto]);
 
-  const nextLine = () => {
-    setIsAuto(false);
-    setIndex((prev) => (prev + 1) % lines.length);
-  };
+const nextLine = () => {
+  setIndex((prev) => (prev + 1) % lines.length);
+};
 
-  const prevLine = () => {
-    setIsAuto(false);
-    setIndex((prev) => (prev - 1 + lines.length) % lines.length);
-  };
+const prevLine = () => {
+  setIndex((prev) => (prev - 1 + lines.length) % lines.length);
+};
 
   return (
     <main className={theme}>
