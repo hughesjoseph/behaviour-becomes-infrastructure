@@ -1,334 +1,289 @@
-* {
-  box-sizing: border-box;
+import "./App.css";
+import React, { useEffect, useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const lines = [
+  {
+    text: "The elbow bump spread faster than most branding campaigns ever will.",
+    visual: "💪",
+    note: "gesture as protocol",
+  },
+  {
+    text: "No rollout deck. No brand guidelines. No universal language committee.",
+    visual: "📄",
+    note: "anti-system system",
+  },
+  {
+    text: "Just bodies, fear, repetition, media, imitation.",
+    visual: "🦠",
+    note: "pressure makes language",
+  },
+  {
+    text: "Esperanto was designed to be universal.",
+    visual: "🗣️",
+    note: "designed universality",
+  },
+  {
+    text: "The elbow bump became universal because it was needed.",
+    visual: "🤜",
+    note: "emergent behaviour",
+  },
+  {
+    text: "That difference matters.",
+    visual: "⚠️",
+    note: "small sentence, big hinge",
+  },
+  {
+    text: "Some things become global because they are useful under pressure.",
+    visual: "🌍",
+    note: "distributed by necessity",
+  },
+  {
+    text: "Others get pushed through platforms, devices, systems, defaults.",
+    visual: "📱",
+    note: "distributed by infrastructure",
+  },
+  {
+    text: "The U2 album appearing on every iPhone was not really about U2.",
+    visual: "🎧",
+    note: "culture pretending to be a gift",
+  },
+  {
+    text: "It was about suddenly realising the device in your pocket was not fully yours.",
+    visual: "🔓",
+    note: "ownership glitch",
+  },
+  {
+    text: "A gift becomes invasive the second it removes choice.",
+    visual: "🎁",
+    note: "consent is the interface",
+  },
+  {
+    text: "Maybe universal design is less interesting than universal behaviour.",
+    visual: "👀",
+    note: "working thesis",
+  },
+  {
+    text: "Swipe gestures. Loading spinners. QR codes. Floor arrows. Notification dots.",
+    visual: "➡️",
+    note: "tiny rituals",
+  },
+  {
+    text: "Little learnt movements repeated until they start to feel biological.",
+    visual: "🧬",
+    note: "behaviour hardens",
+  },
+  {
+    text: "Most systems stay invisible until they break, or get forced upon you.",
+    visual: "🕳️",
+    note: "infrastructure becomes visible",
+  },
+  {
+    text: "I think I’m writing about how behaviour becomes infrastructure.",
+    visual: "✍️",
+    note: "visual notes in progress",
+  },
+];
+
+function useTypewriter(text, speed = 18) {
+  const [displayed, setDisplayed] = useState("");
+
+  useEffect(() => {
+    setDisplayed("");
+
+    let i = 0;
+
+    const interval = setInterval(() => {
+      i += 1;
+      setDisplayed(text.slice(0, i));
+
+      if (i >= text.length) {
+        clearInterval(interval);
+      }
+    }, speed);
+
+    return () => clearInterval(interval);
+  }, [text, speed]);
+
+  return displayed;
 }
 
-html,
-body,
-#root {
-  margin: 0;
-  width: 100%;
-  min-height: 100%;
-  font-family: Helvetica, Arial, sans-serif;
-}
+export default function App() {
+  const [index, setIndex] = useState(0);
+  const [isAuto, setIsAuto] = useState(true);
+  const [theme, setTheme] = useState("dark");
 
-body {
-  overflow: hidden;
-}
+  const current = lines[index];
+  const typed = useTypewriter(current.text, 18);
 
-:root {
-  --bg: #000000;
-  --text: #ffffff;
-  --muted: rgba(255,255,255,0.45);
-  --grid: rgba(255,255,255,0.07);
-  --line: rgba(255,255,255,0.18);
-}
+  useEffect(() => {
+    if (!isAuto) return;
 
-main.dark {
-  --bg: #000000;
-  --text: #ffffff;
-  --muted: rgba(255,255,255,0.45);
-  --grid: rgba(255,255,255,0.07);
-  --line: rgba(255,255,255,0.18);
-}
+    const readingTime = current.text.length * 110 + 2600;
 
-main.light {
-  --bg: #ffffff;
-  --text: #111111;
-  --muted: rgba(0,0,0,0.45);
-  --grid: rgba(0,0,0,0.08);
-  --line: rgba(0,0,0,0.18);
-}
+    const timer = setTimeout(() => {
+      setIndex((prev) => (prev + 1) % lines.length);
+    }, readingTime);
 
-main.reflective {
-  --bg: linear-gradient(
-    135deg,
-    #ff00cc,
-    #00ffff,
-    #fff700,
-    #00ff88
+    return () => clearTimeout(timer);
+  }, [index, current.text, isAuto]);
+
+  const progress = useMemo(() => {
+    return ((index + 1) / lines.length) * 100;
+  }, [index]);
+
+  const nextLine = () => {
+    setIsAuto(false);
+    setIndex((prev) => (prev + 1) % lines.length);
+  };
+
+  const prevLine = () => {
+    setIsAuto(false);
+    setIndex((prev) => (prev - 1 + lines.length) % lines.length);
+  };
+
+  return (
+    <main className={theme}>
+      <div className="grid" />
+
+      <div className="shell">
+        <header className="header">
+          <div>
+            <div className="kicker">
+              VISUAL NOTES · IN CONSTRUCTION 🚧
+            </div>
+
+            <h1 className="title">
+              Behaviour becomes infrastructure
+            </h1>
+          </div>
+
+          <div className="controls-top">
+            <button
+              className={`theme-dot grid-dot-button ${
+                theme === "grid-theme" ? "active" : ""
+              }`}
+              onClick={() => setTheme("grid-theme")}
+              aria-label="grid theme"
+            />
+
+            <button
+              className={`theme-dot black-dot ${
+                theme === "dark" ? "active" : ""
+              }`}
+              onClick={() => setTheme("dark")}
+              aria-label="dark theme"
+            />
+
+            <button
+              className={`theme-dot white-dot ${
+                theme === "light" ? "active" : ""
+              }`}
+              onClick={() => setTheme("light")}
+              aria-label="light theme"
+            />
+
+            <button
+              className={`theme-dot reflective-dot-button ${
+                theme === "reflective" ? "active" : ""
+              }`}
+              onClick={() => setTheme("reflective")}
+              aria-label="reflective theme"
+            />
+
+            <button
+              type="button"
+              className="pause-button"
+              onClick={() => setIsAuto((v) => !v)}
+              aria-label="pause or play"
+            >
+              {isAuto ? "Ⅱ" : "›"}
+            </button>
+          </div>
+        </header>
+
+        <section className="stage">
+          <div className="text-wrap">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-area">
+                  {typed}
+                  <span className="cursor">|</span>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <div className="visual-wrap">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current.visual}
+                className="visual-inner"
+                initial={{ opacity: 0, scale: 0.7, rotate: -6 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                exit={{ opacity: 0, scale: 1.2, rotate: 6 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 120,
+                  damping: 14,
+                }}
+              >
+                <div className="emoji">
+                  {current.visual}
+                </div>
+
+                <div className="note">
+                  {current.note}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </section>
+
+        <footer className="footer">
+          <div className="progress">
+            <motion.div
+              className="progress-inner"
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.3 }}
+            />
+          </div>
+
+          <div className="footer-row">
+            <div className="counter">
+              <strong>
+                {String(index + 1).padStart(2, "0")}
+              </strong>
+              {" / "}
+              {String(lines.length).padStart(2, "0")}
+            </div>
+
+            <div className="buttons">
+              <button
+                type="button"
+                onClick={prevLine}
+                aria-label="previous"
+              >
+                ‹
+              </button>
+
+              <button
+                type="button"
+                onClick={nextLine}
+                aria-label="next"
+              >
+                ›
+              </button>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
   );
-  --text: #444444;
-  --muted: rgba(0,0,0,0.45);
-  --grid: rgba(0,0,0,0.08);
-  --line: rgba(0,0,0,0.18);
-}
-
-main {
-  width: 100vw;
-  height: 100vh;
-  background: var(--bg);
-  color: var(--text);
-  position: relative;
-  overflow: hidden;
-}
-
-.grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 44px 44px;
-}
-
-.shell {
-  position: relative;
-  z-index: 2;
-  height: 100%;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.kicker {
-  font-size: 11px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 14px;
-}
-
-.title {
-  font-size: 22px;
-  margin: 0;
-  font-weight: 500;
-}
-
-.controls-top {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.top-button {
-  background: transparent;
-  color: var(--text);
-  border: none;
-  cursor: pointer;
-}
-
-.theme-toggle {
-  width: 118px;
-  height: 42px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: transparent;
-  cursor: pointer;
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.toggle-dots {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.dot {
-  width: 16px;
-  height: 16px;
-  border-radius: 999px;
-  border: 1px solid var(--text);
-}
-
-.grid-dot {
-  background:
-    linear-gradient(var(--text) 1px, transparent 1px),
-    linear-gradient(90deg, var(--text) 1px, transparent 1px);
-  background-size: 5px 5px;
-}
-
-.black {
-  background: #000;
-}
-
-.white {
-  background: #fff;
-}
-
-.reflective-dot {
-  background: linear-gradient(
-    135deg,
-    #ff00cc,
-    #00ffff,
-    #fff700,
-    #00ff88
-  );
-}
-
-.stage {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 40px;
-  align-items: center;
-  flex: 1;
-}
-
-.text-wrap {
-  max-width: 1100px;
-  width: 100%;
-}
-
-.text-area {
-  font-size: clamp(52px, 7vw, 128px);
-  line-height: 0.92;
-  letter-spacing: -0.07em;
-  font-weight: 700;
-  text-align: left;
-}
-
-.cursor {
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
-.visual-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.visual-inner {
-  position: relative;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.emoji {
-  font-size: clamp(120px, 16vw, 260px);
-  line-height: 1;
-}
-
-.note {
-  margin-top: 18px;
-  background: var(--text);
-  color: var(--bg);
-  padding: 10px 16px;
-  border-radius: 999px;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-main.reflective .note {
-  background: rgba(255,255,255,0.7);
-  color: #444;
-}
-
-.footer {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.progress {
-  width: 100%;
-  height: 4px;
-  background: var(--line);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.progress-inner {
-  height: 100%;
-  background: var(--text);
-  transition: width 0.35s ease;
-}
-
-.footer-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.counter {
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.counter strong {
-  color: var(--text);
-}
-
-.icon-button,
-.buttons button {
-  font-family: Helvetica, Arial, sans-serif;
-  font-weight: 400;
-  letter-spacing: 0;
-}
-
-.icon-button {
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  border: none;
-  background: transparent;
-  color: var(--text);
-  cursor: pointer;
-  padding: 0;
-}
-
-.buttons {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.buttons button {
-  border: none;
-  background: transparent;
-  color: var(--text);
-  padding: 8px;
-  cursor: pointer;
-  font-size: 26px;
-  line-height: 1;
-  min-width: auto;
-  border-radius: 0;
-}
-
-@media (max-width: 900px) {
-  .shell {
-    padding: 24px;
-  }
-
-  .stage {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
-  .text-area {
-    font-size: clamp(42px, 13vw, 82px);
-  }
-
-  .emoji {
-    font-size: clamp(120px, 36vw, 220px);
-  }
-
-  .header {
-    gap: 20px;
-  }
-
-  .footer-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
 }
